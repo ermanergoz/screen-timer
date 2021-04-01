@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.erman.screentimeout.ui.ViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/nextViewTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="64dp"
+            android:gravity="center"
+            android:text="@{viewModel.isAlarmSet  ? viewModel.nextAlarm : @string/blank}"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/timeoutEditText"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="number"
+            android:onTextChanged="@{viewModel.onDurationChanged}"
+            android:text="@{viewModel.screenTimeOut.toString()}" />
+
+        <Button
+            android:id="@+id/setButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:onClick="@{() -> viewModel.onSetButtonTapped()}"
+            android:text="@{viewModel.isAlarmSet ? @string/cancel : @string/set}" />
+
+        <Button
+            android:id="@+id/enableBtn"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="128dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="@{() -> viewModel.onAdminButtonTapped()}"
+            android:text="@string/change_admin_rights" />
+
+    </LinearLayout>
+</layout>

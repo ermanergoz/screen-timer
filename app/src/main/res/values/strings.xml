@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ScreenTimer</string>
+    <string name="cancel">Cancel</string>
+    <string name="change_admin_rights">Change Admin rights</string>
+    <string name="set">Set</string>
+    <string name="blank"></string>
+</resources>
