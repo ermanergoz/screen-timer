@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.erman.screentimeout.util.REQUEST_CODE_ALARM_PENDING_INTENT
 import java.util.*
 
 class AlarmHandler(private val context: Context) {
@@ -29,7 +30,7 @@ class AlarmHandler(private val context: Context) {
         cancelAlarm()
 
         val screenLockAlarm = Intent(context, AlarmReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(context, 0, intent, 0)
+            PendingIntent.getBroadcast(context, REQUEST_CODE_ALARM_PENDING_INTENT, intent, 0)
         }
 
         val calendar: Calendar = Calendar.getInstance().apply {
@@ -49,7 +50,7 @@ class AlarmHandler(private val context: Context) {
         val intent = Intent(context, AlarmReceiver::class.java)
         val alarmIntent = PendingIntent.getBroadcast(
             context.applicationContext,
-            0,
+            REQUEST_CODE_ALARM_PENDING_INTENT,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -58,16 +59,11 @@ class AlarmHandler(private val context: Context) {
     }
 
     fun isAlarmSet(): Boolean {
-        val alarmUp = PendingIntent.getBroadcast(
+        return PendingIntent.getBroadcast(
             context,
-            0,
+            REQUEST_CODE_ALARM_PENDING_INTENT,
             Intent(context, AlarmReceiver::class.java),
             PendingIntent.FLAG_NO_CREATE
         ) != null
-
-        if (alarmUp) {
-            return true
-        }
-        return false
     }
 }

@@ -54,7 +54,6 @@ class ViewModel(
             }
         }
         _isAlarmSet.value = alarmHandler.isAlarmSet()
-
     }
 
     fun onDurationChanged(duration: CharSequence, start: Int, before: Int, count: Int) {
