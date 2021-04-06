@@ -42,7 +42,7 @@
             android:gravity="center"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:onTextChanged="@{viewModel.onDurationChanged}"
+            android:onTextChanged="@{viewModel.onTimeoutChanged}"
             android:text="@{viewModel.screenTimeOut.toString()}"
             tools:ignore="LabelFor" />
 

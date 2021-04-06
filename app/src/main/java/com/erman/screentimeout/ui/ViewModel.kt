@@ -32,6 +32,11 @@ class ViewModel(
     }
     val nextAlarm: LiveData<String> = _nextAlarm
 
+    private val _hideKeyboard = MutableLiveData<Boolean>().apply {
+        value = false
+    }
+    val hideKeyboard: LiveData<Boolean> = _hideKeyboard
+
     fun onAdminButtonTapped() {
         if (deviceAdmin.isAdminActive()) {
             deviceAdmin.deactivateAdmin()
@@ -54,10 +59,15 @@ class ViewModel(
             }
         }
         _isAlarmSet.value = alarmHandler.isAlarmSet()
+        _hideKeyboard.value = true
     }
 
-    fun onDurationChanged(duration: CharSequence, start: Int, before: Int, count: Int) {
+    fun onTimeoutChanged(duration: CharSequence, start: Int, before: Int, count: Int) {
         if (duration.isNotEmpty())
             _screenTimeOut.value = duration.toString().toInt()
+    }
+
+    fun refreshAlarmState() {
+        _isAlarmSet.value = alarmHandler.isAlarmSet()
     }
 }
