@@ -18,7 +18,7 @@ import com.erman.screentimeout.util.ACTIVITY_RES_ENABLE
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
-    val viewModel: ViewModel by inject()
+    private val viewModel: ViewModel by inject()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this@MainActivity
         binding.viewModel = viewModel
 
-        viewModel.activateAdmin.observe(this, Observer {
+        viewModel.activateAdmin.observe(this,  {
             val compName = ComponentName(this, AdminReceiver::class.java)
             val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
             intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName)
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, ACTIVITY_RES_ENABLE)
         })
 
-        viewModel.hideKeyboard.observe(this, Observer {
+        viewModel.hideKeyboard.observe(this, {
             val view: View? = this.currentFocus
             if (view != null) {
                 val inputMethodManager: InputMethodManager =
