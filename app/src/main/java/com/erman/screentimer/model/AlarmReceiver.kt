@@ -1,4 +1,4 @@
-package com.erman.screentimeout.model
+package com.erman.screentimer.model
 
 import android.content.BroadcastReceiver
 import android.content.Context

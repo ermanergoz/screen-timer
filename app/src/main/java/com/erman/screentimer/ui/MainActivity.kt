@@ -1,4 +1,4 @@
-package com.erman.screentimeout.ui
+package com.erman.screentimer.ui
 
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
@@ -10,11 +10,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import com.erman.screentimeout.R
-import com.erman.screentimeout.databinding.ActivityMainBinding
-import com.erman.screentimeout.model.AdminReceiver
-import com.erman.screentimeout.util.ACTIVITY_RES_ENABLE
+import com.erman.screentimer.R
+import com.erman.screentimer.databinding.ActivityMainBinding
+import com.erman.screentimer.model.AdminReceiver
+import com.erman.screentimer.util.ACTIVITY_RES_ENABLE
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {

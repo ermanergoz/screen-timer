@@ -1,11 +1,11 @@
-package com.erman.screentimeout.model
+package com.erman.screentimer.model
 
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.erman.screentimeout.util.REQUEST_CODE_ALARM_PENDING_INTENT
+import com.erman.screentimer.util.REQUEST_CODE_ALARM_PENDING_INTENT
 import java.util.*
 
 class AlarmHandler(private val context: Context) {

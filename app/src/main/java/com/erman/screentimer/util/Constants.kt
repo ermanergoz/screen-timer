@@ -1,4 +1,4 @@
-package com.erman.screentimeout.util
+package com.erman.screentimer.util
 
 const val DURATION_DEF_VAL: Int = 5
 const val ACTIVITY_RES_ENABLE: Int = 1

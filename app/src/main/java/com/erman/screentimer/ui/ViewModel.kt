@@ -1,11 +1,11 @@
-package com.erman.screentimeout.ui
+package com.erman.screentimer.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.erman.screentimeout.model.AlarmHandler
-import com.erman.screentimeout.util.DURATION_DEF_VAL
-import com.erman.screentimeout.model.DeviceAdmin
+import com.erman.screentimer.model.AlarmHandler
+import com.erman.screentimer.util.DURATION_DEF_VAL
+import com.erman.screentimer.model.DeviceAdmin
 import java.util.*
 
 class ViewModel(

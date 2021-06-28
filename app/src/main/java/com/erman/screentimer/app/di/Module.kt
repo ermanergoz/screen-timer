@@ -1,8 +1,8 @@
-package com.erman.screentimeout
+package com.erman.screentimer
 
-import com.erman.screentimeout.model.AlarmHandler
-import com.erman.screentimeout.model.DeviceAdmin
-import com.erman.screentimeout.ui.ViewModel
+import com.erman.screentimer.model.AlarmHandler
+import com.erman.screentimer.model.DeviceAdmin
+import com.erman.screentimer.ui.ViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
