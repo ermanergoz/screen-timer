@@ -1,4 +1,4 @@
-package com.erman.screentimeout.model
+package com.erman.screentimer.model
 
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
