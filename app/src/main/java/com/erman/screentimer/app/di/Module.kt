@@ -3,7 +3,7 @@ package com.erman.screentimer
 import com.erman.screentimer.model.AlarmHandler
 import com.erman.screentimer.model.DeviceAdmin
 import com.erman.screentimer.ui.ViewModel
-import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val AppModule = module {
