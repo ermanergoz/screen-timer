@@ -17,7 +17,7 @@ import com.erman.screentimer.util.ACTIVITY_RES_ENABLE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private val viewModel: ViewModel by viewModel()
+    private val viewModel: MainViewModel by viewModel()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.erman.screentimer.ui.ViewModel" />
+            type="com.erman.screentimer.ui.MainViewModel" />
     </data>
 
     <LinearLayout
