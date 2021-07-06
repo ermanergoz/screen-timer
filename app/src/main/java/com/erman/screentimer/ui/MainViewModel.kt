@@ -3,14 +3,16 @@ package com.erman.screentimer.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.erman.screentimer.model.AlarmHandler
-import com.erman.screentimer.util.DURATION_DEF_VAL
+import com.erman.screentimer.model.AlarmScheduler
 import com.erman.screentimer.model.DeviceAdmin
+import com.erman.screentimer.util.DURATION_DEF_VAL
 import java.util.*
+import java.util.concurrent.TimeUnit
 
-class ViewModel(
+class MainViewModel(
     private val deviceAdmin: DeviceAdmin,
-    private val alarmHandler: AlarmHandler
+    private val alarmScheduler: AlarmScheduler,
+    private val currentTimeMillis: () -> Long = System::currentTimeMillis
 ) : ViewModel() {
     private val _activateAdmin = MutableLiveData<Boolean>().apply {
         value = false
@@ -46,19 +48,16 @@ class ViewModel(
     }
 
     fun onSetButtonTapped() {
-        if (alarmHandler.isAlarmSet()) {
-            alarmHandler.cancelAlarm()
+        if (alarmScheduler.isAlarmSet()) {
+            alarmScheduler.cancelAlarm()
         } else {
             screenTimeOut.value?.let {
-                alarmHandler.setAlarm(it)
-
-                val calendar = Calendar.getInstance()
-                calendar.set(Calendar.MINUTE, Calendar.getInstance().get(Calendar.MINUTE) + it)
-                _nextAlarm.value = calendar.get(Calendar.HOUR_OF_DAY).toString() + " : " +
-                        calendar.get(Calendar.MINUTE).toString()
+                val triggerAtMillis = currentTimeMillis() + TimeUnit.MINUTES.toMillis(it.toLong())
+                alarmScheduler.setAlarm(triggerAtMillis)
+                _nextAlarm.value = formatTime(triggerAtMillis)
             }
         }
-        _isAlarmSet.value = alarmHandler.isAlarmSet()
+        _isAlarmSet.value = alarmScheduler.isAlarmSet()
         _hideKeyboard.value = true
     }
 
@@ -68,6 +67,12 @@ class ViewModel(
     }
 
     fun refreshAlarmState() {
-        _isAlarmSet.value = alarmHandler.isAlarmSet()
+        _isAlarmSet.value = alarmScheduler.isAlarmSet()
+    }
+
+    private fun formatTime(timeInMillis: Long): String {
+        val calendar = Calendar.getInstance().apply { this.timeInMillis = timeInMillis }
+        return calendar.get(Calendar.HOUR_OF_DAY).toString() + " : " +
+                calendar.get(Calendar.MINUTE).toString()
     }
 }

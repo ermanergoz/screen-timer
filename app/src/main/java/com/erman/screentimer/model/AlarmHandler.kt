@@ -6,64 +6,42 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.erman.screentimer.util.REQUEST_CODE_ALARM_PENDING_INTENT
-import java.util.*
 
-class AlarmHandler(private val context: Context) {
-    private fun setAlarm(calendar: Calendar, intent: PendingIntent) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+class AlarmHandler(private val context: Context) : AlarmScheduler {
+    private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    override fun setAlarm(triggerAtMillis: Long) {
+        cancelAlarm()
+
+        val alarmIntent = getAlarmIntent(0) ?: return
 
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
                 alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    intent
+                    triggerAtMillis,
+                    alarmIntent
                 )
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ->
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, intent)
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, alarmIntent)
             else ->
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, intent)
+                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, alarmIntent)
         }
     }
 
-    fun setAlarm(screenTimeOut: Int) {
-        cancelAlarm()
-
-        val screenLockAlarm = Intent(context, AlarmReceiver::class.java).let { intent ->
-            PendingIntent.getBroadcast(context, REQUEST_CODE_ALARM_PENDING_INTENT, intent, 0)
+    override fun cancelAlarm() {
+        getAlarmIntent(PendingIntent.FLAG_NO_CREATE)?.let { alarmIntent ->
+            alarmManager.cancel(alarmIntent)
+            alarmIntent.cancel()
         }
-
-        val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
-            set(Calendar.MINUTE, Calendar.getInstance().get(Calendar.MINUTE) + screenTimeOut)
-            set(Calendar.SECOND, Calendar.getInstance().get(Calendar.SECOND))
-        }
-
-        setAlarm(calendar, screenLockAlarm)
     }
 
-    fun cancelAlarm() {
-        val alarmManager: AlarmManager =
-            context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    override fun isAlarmSet(): Boolean = getAlarmIntent(PendingIntent.FLAG_NO_CREATE) != null
 
-        val intent = Intent(context, AlarmReceiver::class.java)
-        val alarmIntent = PendingIntent.getBroadcast(
-            context.applicationContext,
-            REQUEST_CODE_ALARM_PENDING_INTENT,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        alarmManager.cancel(alarmIntent)
-        alarmIntent.cancel()
-    }
-
-    fun isAlarmSet(): Boolean {
-        return PendingIntent.getBroadcast(
-            context,
-            REQUEST_CODE_ALARM_PENDING_INTENT,
-            Intent(context, AlarmReceiver::class.java),
-            PendingIntent.FLAG_NO_CREATE
-        ) != null
-    }
+    private fun getAlarmIntent(flags: Int): PendingIntent? = PendingIntent.getBroadcast(
+        context,
+        REQUEST_CODE_ALARM_PENDING_INTENT,
+        Intent(context, AlarmReceiver::class.java),
+        flags
+    )
 }

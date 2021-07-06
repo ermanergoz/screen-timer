@@ -14,12 +14,12 @@ import com.erman.screentimer.R
 import com.erman.screentimer.databinding.ActivityMainBinding
 import com.erman.screentimer.model.AdminReceiver
 import com.erman.screentimer.util.ACTIVITY_RES_ENABLE
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private val viewModel: ViewModel by inject()
+    private val viewModel: MainViewModel by viewModel()
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
