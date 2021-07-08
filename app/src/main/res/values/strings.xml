@@ -6,4 +6,5 @@
     <string name="blank" />
     <string name="device_admin_enabled">Admin Device features are enabled</string>
     <string name="device_admin_disabled">Admin Device features are disabled</string>
+    <string name="device_admin_explanation">Admin rights are needed to turn off the screen when the timer ends.</string>
 </resources>

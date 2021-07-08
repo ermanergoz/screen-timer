@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.erman.screentimer.model.AlarmScheduler
 import com.erman.screentimer.model.DeviceAdmin
 import com.erman.screentimer.util.DURATION_DEF_VAL
+import com.erman.screentimer.util.Event
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -14,10 +15,8 @@ class MainViewModel(
     private val alarmScheduler: AlarmScheduler,
     private val currentTimeMillis: () -> Long = System::currentTimeMillis
 ) : ViewModel() {
-    private val _activateAdmin = MutableLiveData<Boolean>().apply {
-        value = false
-    }
-    val activateAdmin: LiveData<Boolean> = _activateAdmin
+    private val _activateAdmin = MutableLiveData<Event<Unit>>()
+    val activateAdmin: LiveData<Event<Unit>> = _activateAdmin
 
     private val _screenTimeOut = MutableLiveData<Int>().apply {
         value = DURATION_DEF_VAL
@@ -34,16 +33,20 @@ class MainViewModel(
     }
     val nextAlarm: LiveData<String> = _nextAlarm
 
-    private val _hideKeyboard = MutableLiveData<Boolean>().apply {
-        value = false
+    private val _hideKeyboard = MutableLiveData<Event<Unit>>()
+    val hideKeyboard: LiveData<Event<Unit>> = _hideKeyboard
+
+    init {
+        if (!deviceAdmin.isAdminActive()) {
+            _activateAdmin.value = Event(Unit)
+        }
     }
-    val hideKeyboard: LiveData<Boolean> = _hideKeyboard
 
     fun onAdminButtonTapped() {
         if (deviceAdmin.isAdminActive()) {
             deviceAdmin.deactivateAdmin()
         } else {
-            _activateAdmin.value = true
+            _activateAdmin.value = Event(Unit)
         }
     }
 
@@ -58,7 +61,7 @@ class MainViewModel(
             }
         }
         _isAlarmSet.value = alarmScheduler.isAlarmSet()
-        _hideKeyboard.value = true
+        _hideKeyboard.value = Event(Unit)
     }
 
     fun onTimeoutChanged(duration: CharSequence, start: Int, before: Int, count: Int) {
