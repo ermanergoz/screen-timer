@@ -18,10 +18,10 @@ class MainViewModel(
     private val _activateAdmin = MutableLiveData<Event<Unit>>()
     val activateAdmin: LiveData<Event<Unit>> = _activateAdmin
 
-    private val _screenTimeOut = MutableLiveData<Int>().apply {
+    private val _screenTimeOut = MutableLiveData<Int?>().apply {
         value = DURATION_DEF_VAL
     }
-    val screenTimeOut: LiveData<Int> = _screenTimeOut
+    val screenTimeOut: LiveData<Int?> = _screenTimeOut
 
     private val _isAlarmSet = MutableLiveData<Boolean>().apply {
         value = false
@@ -54,7 +54,7 @@ class MainViewModel(
         if (alarmScheduler.isAlarmSet()) {
             alarmScheduler.cancelAlarm()
         } else {
-            screenTimeOut.value?.let {
+            screenTimeOut.value?.takeIf { it > 0 }?.let {
                 val triggerAtMillis = currentTimeMillis() + TimeUnit.MINUTES.toMillis(it.toLong())
                 alarmScheduler.setAlarm(triggerAtMillis)
                 _nextAlarm.value = formatTime(triggerAtMillis)
@@ -64,9 +64,8 @@ class MainViewModel(
         _hideKeyboard.value = Event(Unit)
     }
 
-    fun onTimeoutChanged(duration: CharSequence, start: Int, before: Int, count: Int) {
-        if (duration.isNotEmpty())
-            _screenTimeOut.value = duration.toString().toInt()
+    fun onTimeoutChanged(duration: CharSequence) {
+        _screenTimeOut.value = duration.toString().toIntOrNull()
     }
 
     fun refreshAlarmState() {
