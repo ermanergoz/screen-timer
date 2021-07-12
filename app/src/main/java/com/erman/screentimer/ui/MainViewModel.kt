@@ -28,10 +28,8 @@ class MainViewModel(
     }
     val isAlarmSet: LiveData<Boolean> = _isAlarmSet
 
-    private val _nextAlarm = MutableLiveData<String>().apply {
-        value = "-"
-    }
-    val nextAlarm: LiveData<String> = _nextAlarm
+    private val _nextAlarm = MutableLiveData<String?>()
+    val nextAlarm: LiveData<String?> = _nextAlarm
 
     private val _hideKeyboard = MutableLiveData<Event<Unit>>()
     val hideKeyboard: LiveData<Event<Unit>> = _hideKeyboard
@@ -40,6 +38,7 @@ class MainViewModel(
         if (!deviceAdmin.isAdminActive()) {
             _activateAdmin.value = Event(Unit)
         }
+        refreshAlarmState()
     }
 
     fun onAdminButtonTapped() {
@@ -51,16 +50,14 @@ class MainViewModel(
     }
 
     fun onSetButtonTapped() {
-        if (alarmScheduler.isAlarmSet()) {
+        if (alarmScheduler.getAlarmTime() != null) {
             alarmScheduler.cancelAlarm()
         } else {
             screenTimeOut.value?.takeIf { it > 0 }?.let {
-                val triggerAtMillis = currentTimeMillis() + TimeUnit.MINUTES.toMillis(it.toLong())
-                alarmScheduler.setAlarm(triggerAtMillis)
-                _nextAlarm.value = formatTime(triggerAtMillis)
+                alarmScheduler.setAlarm(currentTimeMillis() + TimeUnit.MINUTES.toMillis(it.toLong()))
             }
         }
-        _isAlarmSet.value = alarmScheduler.isAlarmSet()
+        refreshAlarmState()
         _hideKeyboard.value = Event(Unit)
     }
 
@@ -69,12 +66,18 @@ class MainViewModel(
     }
 
     fun refreshAlarmState() {
-        _isAlarmSet.value = alarmScheduler.isAlarmSet()
+        val alarmTime = alarmScheduler.getAlarmTime()
+        _isAlarmSet.value = alarmTime != null
+        _nextAlarm.value = alarmTime?.let { formatTime(it) }
     }
 
     private fun formatTime(timeInMillis: Long): String {
         val calendar = Calendar.getInstance().apply { this.timeInMillis = timeInMillis }
-        return calendar.get(Calendar.HOUR_OF_DAY).toString() + " : " +
-                calendar.get(Calendar.MINUTE).toString()
+        return String.format(
+            Locale.getDefault(),
+            "%02d : %02d",
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE)
+        )
     }
 }
