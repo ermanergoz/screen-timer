@@ -26,44 +26,45 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this@MainActivity
         binding.viewModel = viewModel
 
-        viewModel.activateAdmin.observe(this,  {
-            val compName = ComponentName(this, AdminReceiver::class.java)
-            val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
-            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName)
-            intent.putExtra(
-                DevicePolicyManager.EXTRA_ADD_EXPLANATION,
-                ""
-            )
-            startActivityForResult(intent, ACTIVITY_RES_ENABLE)
+        viewModel.activateAdmin.observe(this, { event ->
+            event.getContentIfNotHandled()?.let { requestAdminRights() }
         })
 
-        viewModel.hideKeyboard.observe(this, {
-            val view: View? = this.currentFocus
-            if (view != null) {
-                val inputMethodManager: InputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-            }
+        viewModel.hideKeyboard.observe(this, { event ->
+            event.getContentIfNotHandled()?.let { hideKeyboard() }
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            ACTIVITY_RES_ENABLE -> if (resultCode == RESULT_OK) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.device_admin_enabled),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Toast.makeText(
-                    this,
-                    getString(R.string.device_admin_disabled),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+    private fun requestAdminRights() {
+        val compName = ComponentName(this, AdminReceiver::class.java)
+        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
+        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName)
+        intent.putExtra(
+            DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+            getString(R.string.device_admin_explanation)
+        )
+        startActivityForResult(intent, ACTIVITY_RES_ENABLE)
+    }
+
+    private fun hideKeyboard() {
+        val view: View? = this.currentFocus
+        if (view != null) {
+            val inputMethodManager: InputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == ACTIVITY_RES_ENABLE && resultCode != RESULT_OK) {
+            Toast.makeText(
+                this,
+                getString(R.string.device_admin_disabled),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     override fun onResume() {
