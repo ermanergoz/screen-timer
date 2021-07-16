@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">ScreenTimer</string>
+    <string name="app_name">Screen Timer</string>
     <string name="cancel">Cancel</string>
     <string name="change_admin_rights">Change Admin rights</string>
     <string name="set">Set</string>
-    <string name="blank"></string>
+    <string name="blank" />
     <string name="device_admin_enabled">Admin Device features are enabled</string>
     <string name="device_admin_disabled">Admin Device features are disabled</string>
+    <string name="device_admin_explanation">Admin rights are needed to turn off the screen when the timer ends.</string>
 </resources>

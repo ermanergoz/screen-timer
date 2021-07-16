@@ -1,10 +1,10 @@
-package com.erman.screentimeout.model
+package com.erman.screentimer.model
 
 import android.app.admin.DeviceAdminReceiver
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
-import com.erman.screentimeout.R
+import com.erman.screentimer.R
 
 class AdminReceiver : DeviceAdminReceiver() {
     override fun onEnabled(context: Context, intent: Intent) {

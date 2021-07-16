@@ -1,4 +1,4 @@
-package com.erman.screentimeout
+package com.erman.screentimer
 
 import org.junit.Test
 
